@@ -1,99 +1,39 @@
+require "active_support/core_ext/integer/time"
+
 Rails.application.configure do
-  # Cache classes and avoid code reloading
-  config.cache_classes = true
+  # Eager load code on boot to improve performance.
   config.eager_load = true
 
-  # Full error reports are disabled for security
+  # Full error reports are disabled for security reasons.
   config.consider_all_requests_local = false
 
-  # Enable caching for performance
+  # Enable server timing
+  config.server_timing = true
+
+  # Enable caching with a memory store.
+  config.cache_store = :memory_store
   config.action_controller.perform_caching = true
-  config.cache_store = :mem_cache_store
 
-  # Serve static files (consider using a web server like Nginx or Apache)
-  config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
+  # Store uploaded files on the local file system (see config/storage.yml for options).
+  config.active_storage.service = :local
 
-  # Compress JavaScripts and CSS
-  config.assets.js_compressor = :uglifier
-  config.assets.css_compressor = :sass
-
-  # Do not fallback to assets pipeline if a precompiled asset is missed
-  config.assets.compile = false
-
-  # Enable serving of assets from an asset server
-  config.action_controller.asset_host = 'https://assets.example.com'
-
-  # Specify the header that your server uses for sending files
-  config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
-  # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
-
-  # Force all access to the app over SSL
-  config.force_ssl = true
-
-  # Use a real queuing backend for Active Job
-  config.active_job.queue_adapter = :sidekiq
-
-  # Log level
-  config.log_level = :info
-
-  # Prepend all log lines with the following tags
-  config.log_tags = [:request_id]
-
-  # Use a different cache store in production
-  config.cache_store = :mem_cache_store
-
-  # Enable serving static files from the `/public` folder by default
-  config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
-
-  # Compress JavaScripts and CSS
-  config.assets.js_compressor = :uglifier
-  # config.assets.css_compressor = :sass
-
-  # Do not fallback to assets pipeline if a precompiled asset is missed
-  config.assets.compile = false
-
-  # Enable serving of images, stylesheets, and JavaScripts from an asset server
-  # config.action_controller.asset_host = 'http://assets.example.com'
-
-  # Specifies the header that your server uses for sending files
-  # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
-  # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
-
-  # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies
-  config.force_ssl = true
-
-  # Use the lowest log level to ensure availability of diagnostic information when problems arise
-  config.log_level = :debug
-
-  # Prepend all log lines with the following tags
-  config.log_tags = [ :request_id ]
-
-  # Use a different cache store in production
-  # config.cache_store = :mem_cache_store
-
-  # Use a real queuing backend for Active Job (and separate queues per environment)
-  # config.active_job.queue_adapter     = :resque
-  # config.active_job.queue_name_prefix = "my_app_production"
-
-  config.action_mailer.perform_caching = false
-
-  # Ignore bad email addresses and do not raise email delivery errors
-  # Set this to true and configure the email server for immediate delivery to raise delivery errors
-  # config.action_mailer.raise_delivery_errors = false
-
-  # Enable locale fallbacks for I18n (makes lookups for any locale fall back to the I18n.default_locale when a translation cannot be found)
-  config.i18n.fallbacks = true
-
-  # Send deprecation notices to registered listeners
-  config.active_support.deprecation = :notify
-
-  # Use default logging formatter so that PID and timestamp are not suppressed
+  # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
 
-  # Use a different logger for distributed setups
-  # require 'syslog/logger'
-  # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
+  # Use a different cache store in production.
+  # config.cache_store = :mem_cache_store
 
+  # Use a real queuing backend for Active Job (and separate queues per environment).
+  # config.active_job.queue_adapter     = :resque
+  # config.active_job.queue_name_prefix = "your_app_production"
+
+  # Enable locale fallbacks for I18n (makes lookups for any locale fall back to the I18n.default_locale when a translation cannot be found).
+  config.i18n.fallbacks = true
+
+  # Send deprecation notices to registered listeners.
+  config.active_support.deprecation = :notify
+
+  # Log to STDOUT because Docker expects all processes to log here. Adjust as needed.
   if ENV["RAILS_LOG_TO_STDOUT"].present?
     logger           = ActiveSupport::Logger.new(STDOUT)
     logger.formatter = config.log_formatter
