@@ -82,64 +82,12 @@ Rails.application.configure do
   # require "syslog/logger"
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
 
-  # Lograge config
-  config.lograge.enabled = true
-
-  # This specifies to log in JSON format
-  config.lograge.formatter = Lograge::Formatters::Json.new
-
   ## Disables log coloration
   config.colorize_logging = false
-
-  # Log to STDOUT
-  config.lograge.logger = ActiveSupport::Logger.new(STDOUT)
-
-  config.lograge.custom_payload do |controller|
-    # Retrieves trace information for current thread
-    correlation = Datadog::Tracing.correlation
-    {
-      # Adds IDs as tags to log output
-      dd: {
-        # To preserve precision during JSON serialization, use strings for large numbers
-        trace_id: correlation.trace_id.to_s,
-        span_id: correlation.span_id.to_s,
-        env: correlation.env.to_s,
-        service: correlation.service.to_s,
-        version: correlation.version.to_s
-      },
-      ddsource: ['ruby'],
-      timestamp: Time.now,
-      host: controller.request.host,
-      referrer: controller.request.referrer,
-      user_id: controller.current_user.try(:id)
-    }
-  end
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  # Inserts middleware to perform automatic connection switching.
-  # The `database_selector` hash is used to pass options to the DatabaseSelector
-  # middleware. The `delay` is used to determine how long to wait after a write
-  # to send a subsequent read to the primary.
-  #
-  # The `database_resolver` class is used by the middleware to determine which
-  # database is appropriate to use based on the time delay.
-  #
-  # The `database_resolver_context` class is used by the middleware to set
-  # timestamps for the last write to the primary. The resolver uses the context
-  # class timestamps to determine how long to wait before reading from the
-  # replica.
-  #
-  # By default Rails will store a last write timestamp in the session. The
-  # DatabaseSelector middleware is designed as such you can define your own
-  # strategy for connection switching and pass that into the middleware through
-  # these configuration options.
-  # config.active_record.database_selector = { delay: 2.seconds }
-  # config.active_record.database_resolver = ActiveRecord::Middleware::DatabaseSelector::Resolver
-  # config.active_record.database_resolver_context = ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
-
-  # Added due to PublicActivity's use of the HashWithIndifferentAccess for loading activities
   config.active_record.use_yaml_unsafe_load = true
 
 end
