@@ -34,10 +34,9 @@ Rails.application.configure do
   config.active_support.report_deprecations = false
 
   # Use a durable cache store.
-  config.cache_store = :solid_cache_store
+  config.cache_store = :memory_store
 
   # Set default URL options for mailer.
-  config.action_mailer.default_url_options = { host: "example.com" }
 
   # Disable mounting Action Cable in production.
   config.action_cable.mount_path = nil
