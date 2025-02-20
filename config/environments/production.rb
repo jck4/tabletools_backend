@@ -1,52 +1,105 @@
-require "active_support/core_ext/integer/time"
-
 Rails.application.configure do
-  # Code is not reloaded between requests.
-  config.enable_reloading = false
-
-  # Eager load code on boot for better performance.
+  # Cache classes and avoid code reloading
+  config.cache_classes = true
   config.eager_load = true
 
-  # Full error reports are disabled.
+  # Full error reports are disabled for security
   config.consider_all_requests_local = false
 
-  # Cache assets for far-future expiry.
-  config.public_file_server.headers = { "cache-control" => "public, max-age=#{1.year.to_i}" }
+  # Enable caching for performance
+  config.action_controller.perform_caching = true
+  config.cache_store = :mem_cache_store
 
-  # Store uploaded files on the local file system.
-  config.active_storage.service = :local
+  # Serve static files (consider using a web server like Nginx or Apache)
+  config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
 
-  # Assume all access is happening through a SSL-terminating reverse proxy.
-  config.assume_ssl = true
+  # Compress JavaScripts and CSS
+  config.assets.js_compressor = :uglifier
+  config.assets.css_compressor = :sass
 
-  # Force all access to the app over SSL and use secure cookies.
+  # Do not fallback to assets pipeline if a precompiled asset is missed
+  config.assets.compile = false
+
+  # Enable serving of assets from an asset server
+  config.action_controller.asset_host = 'https://assets.example.com'
+
+  # Specify the header that your server uses for sending files
+  config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
+  # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
+
+  # Force all access to the app over SSL
   config.force_ssl = true
 
-  # Log to STDOUT with request id as a default log tag.
+  # Use a real queuing backend for Active Job
+  config.active_job.queue_adapter = :sidekiq
+
+  # Log level
+  config.log_level = :info
+
+  # Prepend all log lines with the following tags
+  config.log_tags = [:request_id]
+
+  # Use a different cache store in production
+  config.cache_store = :mem_cache_store
+
+  # Enable serving static files from the `/public` folder by default
+  config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
+
+  # Compress JavaScripts and CSS
+  config.assets.js_compressor = :uglifier
+  # config.assets.css_compressor = :sass
+
+  # Do not fallback to assets pipeline if a precompiled asset is missed
+  config.assets.compile = false
+
+  # Enable serving of images, stylesheets, and JavaScripts from an asset server
+  # config.action_controller.asset_host = 'http://assets.example.com'
+
+  # Specifies the header that your server uses for sending files
+  # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
+  # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
+
+  # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies
+  config.force_ssl = true
+
+  # Use the lowest log level to ensure availability of diagnostic information when problems arise
+  config.log_level = :debug
+
+  # Prepend all log lines with the following tags
   config.log_tags = [ :request_id ]
-  config.logger   = ActiveSupport::TaggedLogging.logger(STDOUT)
-  config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
 
-  # Prevent health checks from clogging up the logs.
-  config.silence_healthcheck_path = "/up"
+  # Use a different cache store in production
+  # config.cache_store = :mem_cache_store
 
-  # Don't log deprecations.
-  config.active_support.report_deprecations = false
+  # Use a real queuing backend for Active Job (and separate queues per environment)
+  # config.active_job.queue_adapter     = :resque
+  # config.active_job.queue_name_prefix = "my_app_production"
 
-  # Use a durable cache store.
-  config.cache_store = :memory_store
+  config.action_mailer.perform_caching = false
 
-  # Set default URL options for mailer.
+  # Ignore bad email addresses and do not raise email delivery errors
+  # Set this to true and configure the email server for immediate delivery to raise delivery errors
+  # config.action_mailer.raise_delivery_errors = false
 
-  # Disable mounting Action Cable in production.
-  config.action_cable.mount_path = nil
-
-  # Enable locale fallbacks for I18n.
+  # Enable locale fallbacks for I18n (makes lookups for any locale fall back to the I18n.default_locale when a translation cannot be found)
   config.i18n.fallbacks = true
+
+  # Send deprecation notices to registered listeners
+  config.active_support.deprecation = :notify
+
+  # Use default logging formatter so that PID and timestamp are not suppressed
+  config.log_formatter = ::Logger::Formatter.new
+
+  # Use a different logger for distributed setups
+  # require 'syslog/logger'
+  # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
+
+  if ENV["RAILS_LOG_TO_STDOUT"].present?
+    logger           = ActiveSupport::Logger.new(STDOUT)
+    logger.formatter = config.log_formatter
+    config.logger    = ActiveSupport::TaggedLogging.new(logger)
+  end
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
-
-  # Only use :id for inspections in production.
-  config.active_record.attributes_for_inspect = [ :id ]
 end
