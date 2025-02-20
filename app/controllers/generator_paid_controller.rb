@@ -1,4 +1,4 @@
-class GeneratorController < ApplicationController
+class GeneratorPaidController < ApplicationController
   require 'openai'
 
   def generate_encounter
