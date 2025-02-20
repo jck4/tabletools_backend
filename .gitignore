@@ -31,7 +31,6 @@ foundryvtt_config.json
 
 *.log
 *.pid
-*.lock
 *.tmp
 
 /.bundle
