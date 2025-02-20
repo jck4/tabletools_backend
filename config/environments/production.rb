@@ -36,10 +36,6 @@ Rails.application.configure do
   # Use a durable cache store.
   config.cache_store = :solid_cache_store
 
-  # Use SolidQueue for Active Job.
-  config.active_job.queue_adapter = :solid_queue
-  config.solid_queue.connects_to = { database: { writing: :queue } }
-
   # Set default URL options for mailer.
   config.action_mailer.default_url_options = { host: "example.com" }
 
